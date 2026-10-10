@@ -429,7 +429,8 @@ export default function Home({ brazilData, spData, rjData, prData, mgData, amDat
 
 export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
     //All request responses
-    const worldResponse = await fetch('https://api.covid19api.com/summary')
+    // covid19api.com was shut down in 2023; disease.sh serves the same global totals
+    const worldResponse = await fetch('https://disease.sh/v3/covid-19/all')
     const brResponse = await fetch('https://covid19-brazil-api.now.sh/api/report/v1/brazil')
     const spResponse = await fetch('https://covid19-brazil-api.now.sh/api/report/v1/brazil/uf/sp')
     const rjResponse = await fetch('https://covid19-brazil-api.now.sh/api/report/v1/brazil/uf/rj')
@@ -438,7 +439,8 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
     const amResponse = await fetch('https://covid19-brazil-api.now.sh/api/report/v1/brazil/uf/am')
 
 
-    const worldData = await worldResponse.json()
+    const world = await worldResponse.json()
+    const worldData = { Global: { TotalConfirmed: world.cases, TotalDeaths: world.deaths, TotalRecovered: world.recovered } }
     const brazilData = await brResponse.json();
     const spData = await spResponse.json()
     const rjData = await rjResponse.json()
